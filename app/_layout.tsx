@@ -1,7 +1,9 @@
+import BottomNavbar from "@/components/BottomNavbar";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
+import { View } from "react-native";
 import "react-native-reanimated";
 
 SplashScreen.preventAutoHideAsync();
@@ -21,5 +23,5 @@ export default function RootLayout() {
     return null;
   }
 
-  return <Stack></Stack>;
+  return <BottomNavbar></BottomNavbar>;
 }

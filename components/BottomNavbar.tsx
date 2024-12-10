@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/Ionicons";
+import AIWallpaper from "./AIWallpaper";
 
 const HomeScreen = () => (
   <View style={styles.screen}>
@@ -22,6 +23,12 @@ const SettingsScreen = () => (
   </View>
 );
 
+const AIWallpaperScreen = () => (
+  <View style={styles.screen}>
+    <AIWallpaper></AIWallpaper>
+  </View>
+);
+
 const Tab = createBottomTabNavigator();
 
 const BottomNavbar = () => {
@@ -38,6 +45,8 @@ const BottomNavbar = () => {
               iconName = focused ? "person" : "person-outline";
             } else if (route.name === "Settings") {
               iconName = focused ? "settings" : "settings-outline";
+            } else if (route.name === "AI Wallpaper") {
+              iconName = focused ? "image" : "image-outline";
             }
 
             return <Icon name={iconName} size={size} color={color} />;
@@ -49,6 +58,7 @@ const BottomNavbar = () => {
       >
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Profile" component={ProfileScreen} />
+        <Tab.Screen name="AI Wallpaper" component={AIWallpaperScreen} />
         <Tab.Screen name="Settings" component={SettingsScreen} />
       </Tab.Navigator>
     </NavigationContainer>

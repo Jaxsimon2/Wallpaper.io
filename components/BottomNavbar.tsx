@@ -1,64 +1,65 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { NavigationContainer } from "@react-navigation/native";
-import Icon from "react-native-vector-icons/Ionicons";
-import AIWallpaper from "./AIWallpaper";
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigationContainer } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/Feather';
+import { LinearGradient } from 'expo-linear-gradient';
 
-const HomeScreen = () => (
-  <View style={styles.screen}>
-    <Text>Home Page</Text>
-  </View>
-);
-
-const ProfileScreen = () => (
-  <View style={styles.screen}>
-    <Text>Profile Page</Text>
-  </View>
-);
-
-const SettingsScreen = () => (
-  <View style={styles.screen}>
-    <Text>Settings Page</Text>
-  </View>
-);
-
-const AIWallpaperScreen = () => (
-  <View style={styles.screen}>
-    <AIWallpaper></AIWallpaper>
-  </View>
-);
+import HomeScreen from './HomeScreen';
+import SearchScreen from './SearchScreen';
+import AIWallpaperScreen from './AIWallpaperScreen';
+import ProfileScreen from './ProfileScreen';
+import SettingsScreen from './SettingsScreen';
+import { theme } from './theme';
 
 const Tab = createBottomTabNavigator();
 
-const BottomNavbar = () => {
+const BottomNavbar: React.FC = () => {
   return (
     <NavigationContainer independent={true}>
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
-            let iconName: string = "Home";
+            let iconName;
 
-            if (route.name === "Home") {
-              iconName = focused ? "home" : "home-outline";
-            } else if (route.name === "Profile") {
-              iconName = focused ? "person" : "person-outline";
-            } else if (route.name === "Settings") {
-              iconName = focused ? "settings" : "settings-outline";
-            } else if (route.name === "AI Wallpaper") {
-              iconName = focused ? "image" : "image-outline";
+            if (route.name === 'Home') {
+              iconName = 'home';
+            } else if (route.name === 'Search') {
+              iconName = 'search';
+            } else if (route.name === 'AI Generator') {
+              iconName = 'cpu';
+            } else if (route.name === 'Profile') {
+              iconName = 'user';
+            } else if (route.name === 'Settings') {
+              iconName = 'settings';
             }
 
             return <Icon name={iconName} size={size} color={color} />;
           },
-          tabBarActiveTintColor: "tomato",
-          tabBarInactiveTintColor: "gray",
+          tabBarActiveTintColor: theme.colors.primary,
+          tabBarInactiveTintColor: theme.colors.textSecondary,
+          tabBarStyle: styles.tabBar,
+          tabBarBackground: () => (
+            <LinearGradient
+              colors={[theme.colors.background, theme.colors.surface]}
+              style={StyleSheet.absoluteFill}
+            />
+          ),
           headerShown: false,
         })}
       >
         <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Search" component={SearchScreen} />
+        <Tab.Screen
+          name="AI Generator"
+          component={AIWallpaperScreen}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Icon name="cpu" size={size} color={color} />
+            ),
+          }}
+        />
         <Tab.Screen name="Profile" component={ProfileScreen} />
-        <Tab.Screen name="AI Wallpaper" component={AIWallpaperScreen} />
         <Tab.Screen name="Settings" component={SettingsScreen} />
       </Tab.Navigator>
     </NavigationContainer>
@@ -66,11 +67,17 @@ const BottomNavbar = () => {
 };
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+  tabBar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    elevation: 0,
+    backgroundColor: 'transparent',
+    height: 60,
+    borderTopWidth: 0,
   },
 });
 
 export default BottomNavbar;
+

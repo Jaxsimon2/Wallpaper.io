@@ -7,18 +7,45 @@ import { theme } from './theme';
 
 const AIWallpaperScreen: React.FC = () => {
   const [prompt, setPrompt] = useState<string>('');
+   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleGenerate = () => {
-    setIsLoading(true);
-    // Simulating image generation
-    setTimeout(() => {
-      setGeneratedImage('https://images.pexels.com/photos/3052361/pexels-photo-3052361.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
-      setIsLoading(false);
-    }, 2000);
-  };
+  const handleGenerate = async () => {
+    if (!prompt) {
+      alert("Please enter a prompt!");
+      return;
+    }
 
+    setLoading(true);
+    setImageUrl(null);
+
+    //for Using a website http://localhost:5000/generate-image
+    //for Using a android emulator http://10.0.2.2:5000/generate-image
+    //Why? 5000 becuase my port is listening to 5 thousand
+    try {
+      const response = await fetch("http://localhost:5000/generate-image", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ prompt }),
+      });
+
+      const data = await response.json();
+      if (data.imageUrl) {
+        setGeneratedImage(data.imageUrl); // 
+      } else {
+        alert("Failed to generate image.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An error occurred while generating the image.");
+    }
+
+    setLoading(false);
+  };
   return (
     <LinearGradient colors={['#1A1A1A', '#0A0A0A']} style={styles.container}>
       <BlurView intensity={20} style={styles.blurContainer}>
@@ -44,28 +71,30 @@ const AIWallpaperScreen: React.FC = () => {
           </View>
         </LinearGradient>
         {isLoading ? (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={theme.colors.primary} />
-            <Text style={styles.loadingText}>Creating your masterpiece...</Text>
-          </View>
-        ) : generatedImage ? (
-          <View style={styles.imageContainer}>
-            <Image source={{ uri: generatedImage }} style={styles.generatedImage} />
-            <View style={styles.actionButtons}>
-              <TouchableOpacity style={styles.actionButton}>
-                <Icon name="download" size={24} color={theme.colors.primary} />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.actionButton}>
-                <Icon name="share" size={24} color={theme.colors.primary} />
-              </TouchableOpacity>
-            </View>
-          </View>
-        ) : (
-          <View style={styles.placeholderContainer}>
-            <Icon name="image" size={80} color={theme.colors.textSecondary} />
-            <Text style={styles.placeholderText}>Your AI-generated wallpaper will appear here</Text>
-          </View>
-        )}
+  <View style={styles.loadingContainer}>
+    <ActivityIndicator size="large" color={theme.colors.primary} />
+    <Text style={styles.loadingText}>Creating your masterpiece...</Text>
+  </View>
+) : generatedImage ? (
+  <View style={styles.imageContainer}>
+    <Image source={{ uri: generatedImage }} style={styles.generatedImage} />
+    <View style={styles.actionButtons}>
+      <TouchableOpacity style={styles.actionButton}>
+        <Icon name="download" size={24} color={theme.colors.primary} />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.actionButton}>
+        <Icon name="share" size={24} color={theme.colors.primary} />
+      </TouchableOpacity>
+    </View>
+  </View>
+) : (
+  <View style={styles.placeholderContainer}>
+    <Icon name="image" size={80} color={theme.colors.textSecondary} />
+    <Text style={styles.placeholderText}>
+      Your AI-generated wallpaper will appear here
+    </Text>
+  </View>
+)}
       </BlurView>
     </LinearGradient>
   );

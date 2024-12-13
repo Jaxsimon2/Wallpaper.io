@@ -11,7 +11,7 @@ const openai = new OpenAI({
 // Middleware
 app.use(bodyParser.json());
 const corsOptions = {
-  origin: ["http://10.0.2.2:3000", "http://10.0.0.64:3000"], // Your frontend IPs
+  origin: ["http://10.0.2.2:3000", "http://localhost:8081"], // Your frontend IPs
   methods: "GET,POST",
 };
 app.use(cors(corsOptions));

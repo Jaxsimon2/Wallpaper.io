@@ -1,7 +1,9 @@
 import React from 'react';
-import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity, FlatList, Dimensions } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity, FlatList, Dimensions, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { theme } from './theme';
+import Icon from 'react-native-vector-icons/AntDesign';
+import { useState } from 'react';
 
 interface Wallpaper {
   id: string;
@@ -27,9 +29,18 @@ const HomeScreen: React.FC = () => {
         style={styles.wallpaperGradient}
       >
         <Text style={styles.wallpaperTitle}>{item.title}</Text>
+        <TouchableOpacity onPress={likePicture}>
+          <Icon name={heartName} size={24} color={"red"} />
+        </TouchableOpacity>
       </LinearGradient>
     </TouchableOpacity>
   );
+
+  const [heartName, setHeartName] = useState("hearto");
+  const likePicture = () => {
+    if (heartName == "hearto") setHeartName("heart");
+    else setHeartName("hearto");
+  }
 
   return (
     <ScrollView style={styles.container}>
@@ -43,7 +54,7 @@ const HomeScreen: React.FC = () => {
             <Text style={styles.categoryText}>{category}</Text>
           </TouchableOpacity>
         ))}
-      </ScrollView>
+    </ScrollView>
       {categories.map((category, index) => (
         <View key={index} style={styles.categorySection}>
           <Text style={styles.categoryTitle}>{category}</Text>
